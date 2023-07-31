@@ -1,0 +1,83 @@
+﻿@model VMTask
+@{
+    ViewData["Title"] = "Edit Task";
+}
+
+<h1>Do you want delete this Task?</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="DeleteTk">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input  type="hidden" asp-for="IdUser" />
+
+            <div class="row mb-3">
+              
+               <div class="col-2">
+                   <label asp-for="IdTask" class="form-label"></label>
+                   <input asp-for="IdTask" class="form-control" readonly/>
+                   <span asp-validation-for="IdTask" class="text-danger"></span>
+                </div>
+               <div class="col-10">
+                  <label asp-for="TitleTask" class="form-label"></label>
+                  <input asp-for="TitleTask" class="form-control" readonly/>
+                  <span asp-validation-for="TitleTask" class="text-danger"></span>
+               </div>
+
+            </div>
+
+            <div class="row mb-3">
+
+                 <div class="col">
+                   <label asp-for="StartDate" class="form-label"></label>
+                   <input asp-for="StartDate" class="form-control" readonly />
+                   <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+
+                <div class="col">
+                   <label asp-for="CloseDate" class="form-label"></label>
+                   <input asp-for="CloseDate" class="form-control" readonly />
+                   <span asp-validation-for="CloseDate" class="text-danger"></span>
+                </div>
+                <div class="col-2">
+                   <label asp-for="HoursTask" class="form-label"></label>
+                   <input asp-for="HoursTask" class="form-control" readonly />
+                   <span asp-validation-for="HoursTask" class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <div class="row mb-3">
+
+             <div class="col-8">
+                   <label asp-for="DescriptionTask" class="form-label"></label>
+                   <textarea asp-for="DescriptionTask" class="form-control" rows="4" readonly></textarea>
+                   <span asp-validation-for="DescriptionTask" class="text-danger"></span>
+             </div>
+             <div class="col-4 mb-3">
+                   <div class="row">
+                      <label asp-for="TeamProject" class="form-label"></label>
+                      <input asp-for="TeamProject" class="form-control" readonly />
+                      <span asp-validation-for="TeamProject" class="text-danger"></span>
+                    </div>
+                   <div class="row">
+                       <label asp-for="Journey" class="form-label"></label>
+                       <select asp-for="Journey" class="form-select" asp-items="Html.GetEnumSelectList<VMJourney>()" disabled></select>
+                       <span asp-validation-for="Journey" class="text-danger"></span>
+                    </div>
+               </div>
+
+            </div>
+
+            <button class="btn btn-danger">Delete Task</button>
+            <a asp-action="Index" class="btn btn-warning">Cancel</a>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts{
+<partial name="_ValidationScriptsPartial" />
+}

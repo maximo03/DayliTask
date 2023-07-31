@@ -1,0 +1,113 @@
+﻿
+@{
+    ViewData["Title"] = "Task";
+
+}
+
+<div class="container">
+   <div id="context">
+       <a asp-action="CreateTask" class="btn btn-primary mb-3">Create new Task</a>
+   </div>
+</div>
+
+<div id="calendario"></div>
+
+<div class="modal fade" id="modalTask" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+           <div class="modal-header">
+                <h5 class="modal-title">Task List </h5>
+                <h5 class="modal-title" id="titleDate"></h5>
+            </div> 
+             <div class="modal-body">
+                 <table class="table">
+                     <thead>
+                         <tr>
+                             <th>IdTask</th>
+                             <th>TitleTask</th>
+                             <th>HoursTask</th>
+                             <th>Actions</th>
+                         </tr>
+                     </thead>
+                     <tbody id="modalTableBody">
+                     </tbody>
+                 </table>
+             </div>
+               <div class="modal-footer">
+                   <h5 id="ht"></h5>
+                   <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+              </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+<script src="~/lib/fullcalendar/main.min.js">
+
+</script>
+
+    <script>
+       document.addEventListener("DOMContentLoaded", function(){
+           const calendarioEl = document.getElementById('calendario');
+           const calendario = new FullCalendar.Calendar(calendarioEl,{
+               dayMaxEventRows: 3,
+               initialView: 'dayGridMonth',
+               events: 'Task/GetTaskCalendar',
+               dateClick: async function(info){
+                  await FindTaskDate(info.dateStr);
+               }
+           });
+
+           calendario.render();
+       })
+
+       async function FindTaskDate(date){
+           const response = await fetch(`Task/GetTaskCalendarForDay?date=${date}`,{ 
+           method:'GET',
+           headers:{
+               'Content-Type':'application/json'
+               }
+           });
+       
+           const json = await response.json();
+           const rows = json.map(tk => {
+                      return `<tr>
+                                 <td>${tk.idTask}</td>
+                                  <td>${tk.titleTask}</td>
+                                  <td>${tk.hoursTask}</td>
+                                 <td>
+                                  <a onclick="rdtU(${tk.idTask})" class="btn btn-success"><i class="bi-pencil-fill"></i></a>
+                                  <a onclick="rdtD(${tk.idTask})" class="btn btn-danger"><i class="bi-trash-fill"></i></a>
+                                 </td>
+                              </tr>`;
+                });
+
+           var sum = parseFloat(0);              
+           json.forEach(e => sum = sum + parseFloat(e.hoursTask));
+
+           $("#titleDate").html(date);
+           $("#modalTableBody").html(rows);
+           $("#ht").html("TotalHours: "+sum);
+
+
+           const modalTask = new bootstrap.Modal(document.getElementById('modalTask'));
+           modalTask.show();
+
+
+
+
+       }
+
+       
+       function rdtU(id){
+           window.location.href = '/Task/EditTask/'+id+'';
+       }
+       function rdtD(id){
+           window.location.href = '/Task/DeleteTask/'+id+'';
+       }
+
+    </script>
+}
+

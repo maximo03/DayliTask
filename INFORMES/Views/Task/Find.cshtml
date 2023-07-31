@@ -1,0 +1,164 @@
+﻿@{
+    ViewData["Title"] = "Find Tasks";
+    
+}
+
+<div class="container">
+
+      <table>
+           <tr>
+               <td>StartDate<input type="date" class="form-control" id="dateStart" /></td>
+               <td>CloseDate<input type="date" class="form-control" id="dateClose"/></td>
+               <td><br/><button class="btn btn-primary" onclick="getTaskTable()">Find Tasks</button> </td>
+               <td><br/><button class="btn btn-success" onclick="getTaskPrintExel()">Print Exel</button> </td>
+               <td></td>
+               <td>TaskID<input type="text" onkeyup="getTaskTableId()" class="form-control" id="dataId"/></td>
+           </tr>
+      </table>
+      <hr />
+
+      <table id="TableView" class="table table-striped" style="width:100%">
+       <thead>
+          <tr>
+             <th>Actions</th>
+             <th>IdTask</th>
+             <th>TitleTask</th>
+             <th>HoursTask</th>
+          </tr>
+       </thead>
+      <tbody id="tableBody">        
+      </tbody>
+    </table>
+
+
+</div>
+
+@section Scripts{
+    <script src="~/lib/sweet-alert/sweetalert2@11.js"></script>
+
+
+
+    <script>
+        
+   async function getTaskTable(){
+            const startDate = document.getElementById('dateStart').value;
+            const endDate = document.getElementById('dateClose').value;
+
+            if(startDate === "" || endDate  === ""){
+                  alertShow('The fields are empty fill them in!');
+            }else{
+            const response = await fetch(`GetTaskTable?dateS=${startDate}&&dateE=${endDate}`,{ 
+                method:'GET',
+                headers:{
+                    'Content-Type':'application/json'
+                    }
+              });
+
+
+
+              const json = await response.json();
+              const rows = json.map(tk => {
+              return `<tr>
+                         <td>
+                            <a onclick="rdtU(${tk.idTask})" class="btn btn-success"><i class="bi-pencil-fill"></i></a>
+                            <a onclick="rdtD(${tk.idTask})" class="btn btn-danger"><i class="bi-trash-fill"></i></a><br/>  
+                         </td>
+                         <td>${tk.idTask}</td>
+                         <td>${tk.titleTask}</td>
+                         <td>${tk.hoursTask}</td>
+                      </tr>`;
+             
+                });
+
+
+             
+              $("#tableBody").html(rows);
+              $('#TableView').DataTable(); 
+  
+              
+           
+
+            
+         }   
+      }
+
+         async function getTaskTableId(){
+            const dataId = document.getElementById('dataId').value;
+
+            if(dataId === ""){
+                  alertShow('The fields are empty fill them in!');
+            }else{
+            const response = await fetch(`GetTaskTableId?IdTask=${dataId}`,{ 
+                method:'GET',
+                headers:{
+                    'Content-Type':'application/json'
+                    }
+              });
+
+
+
+              const json = await response.json();
+              const rows = json.map(tk => {
+              return `<tr>
+                         <td>
+                            <a onclick="rdtU(${tk.idTask})" class="btn btn-success"><i class="bi-pencil-fill"></i></a>
+                            <a onclick="rdtD(${tk.idTask})" class="btn btn-danger"><i class="bi-trash-fill"></i></a><br/>  
+                         </td>
+                         <td>${tk.idTask}</td>
+                         <td>${tk.titleTask}</td>
+                         <td>${tk.hoursTask}</td>
+                      </tr>`;
+             
+                });
+
+
+             
+              $("#tableBody").html(rows);
+              $('#TableView').DataTable(); 
+  
+              
+           
+
+            
+         }   
+      }
+
+        function getTaskPrintExel(){
+            const startDate = document.getElementById('dateStart').value;
+            const endDate = document.getElementById('dateClose').value;
+
+            if(startDate === "" || endDate  === ""){
+                  alertShow('The fields are empty fill them in!');
+            }else{
+ 
+            window.location.href = `/Task/PrintExelFindDate?dateS=${startDate}&&dateE=${endDate}`;
+
+           }
+      }
+
+
+        function alertShow(msj){
+            Swal.fire({
+                icon:'error',
+                Title:'Oops....',
+                text:msj,
+                footer:'Please Try Again'
+            });
+        }
+
+       function rdtU(id){
+           const url = '/Task/EditTask/'+id+'';
+           window.open(url,'_blank');
+       }
+        
+       function rdtD(id){
+            const url = '/Task/DeleteTask/'+id+'';
+           window.open(url,'_blank'); 
+       }
+
+
+    </script>
+
+}
+
+

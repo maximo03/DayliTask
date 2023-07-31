@@ -1,0 +1,50 @@
+﻿@model VMLogin
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div style="display:flex;justify-content:center;align-items:center;"> 
+
+<div style="margin-right:5rem">
+    <img style="width:500px;height:500px;" src="~/Img/logoLogin.svg"/>
+</div>
+<div class="card"  style="width:350px;">
+    <div class="card-header bg-success">
+        <h1 class="text-light">Login</h1>
+    </div>
+    <div class="card-body">
+        <form asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <input asp-for="RememberMe" type="checkbox" class="form-check-input" />
+                <label asp-for="RememberMe" class="form-check-label"></label>
+                
+            </div>
+
+
+            <button class="btn btn-success">Sign In</button>
+        </form>
+    </div>
+</div>
+
+</div>
+
+
+@section Scripts{
+<partial name="_ValidationScriptsPartial" />
+}
+
+
